@@ -1,21 +1,19 @@
-// import Contact from "../../components/Contact";
-import Contact from "../Contact/Contact";
-import { nanoid } from "nanoid";
-import css from "./ContactList.module.css";
 import { useSelector } from "react-redux";
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
+import { selectError, selectFilteredContacts } from "../../redux/contactsSlice";
 
 const ContactList = () => {
-  const selectContacts = useSelector((state) => state.contacts.items);
-  const selectFilter = useSelector((state) => state.filters.name);
-
-  const visibleContacts = selectContacts.filter((contact) =>
-    contact.name.toLowerCase().includes(selectFilter.toLowerCase())
-  );
+  const visibleContacts = useSelector(selectFilteredContacts);
+  const error = useSelector(selectError);
 
   return (
     <ul className={css.list}>
+      {error && (
+        <p>Oops, there was an error, please try reloading!!! {error}</p>
+      )}
       {visibleContacts.map((item) => (
-        <li className={css.contact} key={nanoid()}>
+        <li className={css.contact} key={item.id}>
           <Contact contacts={item} />
         </li>
       ))}
